@@ -49,6 +49,8 @@ public class Cenario {
     private final float[] astVel = { 9f, 14f, 6f, 11f, 8f, 16f };
     private final float[][] astRaio = new float[6][8];
     private int temaAtual;
+    /** false no menu: os degraus so fazem sentido durante a escalada. */
+    public boolean mostrarDegraus = true;
     private static final float PE_X = 480f;            // eixo do astronauta (igual a ASTRO_X)
 
     private final float[] nebX = { 150f, 420f, 700f, 880f, 60f };
@@ -446,7 +448,7 @@ public class Cenario {
         // Degraus pareados na parede: e onde o astronauta pisa (um para cada pe, simetricos em torno dele).
         float dx = 30f * 0.75f;                         // distancia do pe ao eixo, ja na escala do astronauta
         float resto = alt % Astronauta.PASSO_PX;
-        for (int j = 0; j < 12; j++) {
+        for (int j = 0; mostrarDegraus && j < 12; j++) {
             float topoDegrau = Astronauta.Y_SOLA + j * Astronauta.PASSO_PX - resto;
             if (topoDegrau > topo || topoDegrau < -12f) continue;
             for (int k = 0; k < 2; k++) {
