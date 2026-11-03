@@ -5,7 +5,7 @@ Arduino Uno + 3 botoes arcade (Serial 9600) + libGDX (Java) + jSerialComm.
 ## Como abrir e rodar (IntelliJ IDEA)
 
 1. Instale um JDK 17 ou 21 (ex.: Temurin, adoptium.net) e o IntelliJ IDEA (Community serve).
-2. Extraia o ZIP e use **File > Open**, escolhendo a pasta `EscaladaEspacial` (a que contem o `build.gradle`).
+2. Extraia o ZIP e use **File > Open**, escolhendo a pasta `Escalada_Espacial_Final` (a que contem o `build.gradle`).
    Se perguntar, escolha "Trust Project".
 3. Aguarde a importacao do Gradle (barra de progresso no canto inferior direito). Na primeira vez ele baixa
    o Gradle 8.10.2 e as dependencias (libGDX 1.12.1 e jSerialComm 2.10.4); e preciso internet.
@@ -79,6 +79,32 @@ Teste no Monitor Serial (9600): cada clique deve imprimir `L`, `U` ou `R`.
 - **Efeitos:** `acerto.wav` (sino subindo) e `erro.wav` (zumbido curto). Para trocar, use arquivos com os mesmos nomes.
 - Para regerar ou mudar o estilo: `pip install numpy`, edite o topo do script e rode `python3 tools/gerar_audio.py`;
   depois, opcionalmente, `ffmpeg -y -i assets/musica.wav -c:a libvorbis -q:a 4 assets/musica.ogg`.
+
+## Movimentos do astronauta
+
+O astronauta escala **de costas**, de frente para a parede, com estas mudancas em relacao a versao anterior:
+- **Degraus pareados na parede:** dois degraus lado a lado (um para cada pe), simetricos em torno do astronauta, descem junto com
+  a parede a cada puxada. Os pes ficam sempre na mesma altura e na mesma distancia do eixo quando ele para.
+- **Passo de verdade:** a mao esquerda puxa e o pe direito sobe e pisa no proximo degrau (e vice-versa). O pe de tras acompanha o
+  degrau antigo, solta, sobe e se junta ao outro. A sola da bota aparece quando o pe esta no ar.
+- **Parede sincronizada:** a parede rola exatamente o tamanho de um degrau (`Astronauta.PASSO_PX`) por acerto, junto com mao e pe.
+  Na chegada ao Destino Final ele sobe os degraus que faltam, mais rapido quanto mais longe estiver, e comemora.
+- **Fases bem diferentes entre si:** fase 1 azul (Base Orbital), fase 2 roxa lunar com crateras nos paineis e fase 3 vermelha de
+  alerta (listras de perigo amarelas/pretas na parede, pulso vermelho na tela). Parede, vigas, molduras e o rotulo "FASE n" do HUD
+  mudam de cor junto com o fundo (paletas no topo de `Cenario.java`).
+- **Sem cabo na cabeca/mochila** e com balanco lateral bem menor.
+- **Sem modo ritmo (Guitar Hero):** tecla G, tela de ritmo e metodos de musica extras foram removidos.
+- O menu continua com o astronauta de frente, comemorando. Para voltar a vista de frente na escalada, troque `true` por `false`
+  na criacao do astronauta em `GameScreen.java`.
+
+## Decoracao espacial (teste)
+
+Apenas nesta versao de teste. O cenario de cada fase ganhou decoracoes desenhadas por codigo em `Cenario.java`:
+- **Planeta com aneis** na lateral esquerda, **OVNIs** cruzando a tela (3 na fase 3), **asteroides** girando e derivando,
+  **estrelas cadentes** e um **satelite** (fases 1 e 2).
+- **Aliens** flutuando nas margens e espiando pelas **janelas da estacao**, com olhos que piscam. A cor muda por fase.
+- Tudo fica atras da estrutura e do jogo, sem atrapalhar as agarradeiras. Para tirar algo, comente a chamada correspondente
+  em `desenharDecoracao()`.
 
 ## Visual
 

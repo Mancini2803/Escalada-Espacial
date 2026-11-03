@@ -57,13 +57,13 @@ public class GameScreen extends ScreenAdapter {
     private static final float RAIO_HOLD = 30f;
     private static final float ASTRO_X = 480f;
     private static final float ASTRO_Y = 180f;           // altura do quadril do astronauta
-    private static final float PIXELS_POR_PASSO = 70f;
+    private static final float PIXELS_POR_PASSO = Astronauta.PASSO_PX;
 
     private static final Color[] CORES_CONFETE = { Arte.COR_ESQ, Arte.COR_ALTO, Arte.COR_DIR, Arte.DOURADO };
 
     private final Main jogo;
     private final Cenario cenario = new Cenario();
-    private final Astronauta astro = new Astronauta(ASTRO_X, ASTRO_Y);
+    private final Astronauta astro = new Astronauta(ASTRO_X, ASTRO_Y, true);
     private final Array<Entrada> entradas = new Array<>();
     private final Array<Particula> particulas = new Array<>();
     private final Array<Onda> ondas = new Array<>();
@@ -444,22 +444,17 @@ public class GameScreen extends ScreenAdapter {
 
     private void atualizarChegada(float dt) {
         float destino = alturaDestino();
-        float restante = destino - alturaVisual;
 
         if (!chegou) {
-            if (restante > 1.5f) {
-                float vel = Math.max(120f, restante / 2.2f);
-                alturaVisual = Math.min(destino, alturaVisual + vel * dt);
-                autoPassoT -= dt;
-                if (autoPassoT <= 0f && restante > 30f) {
-                    // Sobe alternando as maos (esquerda, direita, esquerda...).
-                    Direcao d = (autoLado % 2 == 0) ? Direcao.ESQUERDA : Direcao.DIREITA;
-                    autoLado++;
-                    astro.puxar(d, HOLD_X[d.ordinal()], HOLD_Y[d.ordinal()], Arte.corDe(d));
-                    autoPassoT = 0.55f;
-                }
+            if (astro.isPuxando()) return;                       // espera o passo atual terminar
+            float restante = destino - astro.getMundoAlvo();
+            if (restante > 1f) {
+                // Sobe passo a passo, alternando as maos; quanto mais longe, mais rapido.
+                astro.setRitmo(MathUtils.clamp(restante / PIXELS_POR_PASSO / 4f, 1f, 2.5f));
+                Direcao d = (autoLado % 2 == 0) ? Direcao.ESQUERDA : Direcao.DIREITA;
+                autoLado++;
+                astro.puxar(d, HOLD_X[d.ordinal()], HOLD_Y[d.ordinal()], Arte.corDe(d));
             } else {
-                alturaVisual = destino;
                 chegou = true;
                 chegadaT = 0f;
                 astro.celebrar();
@@ -626,12 +621,9 @@ public class GameScreen extends ScreenAdapter {
             if (c.y < -20f) confetes.removeIndex(i);
         }
 
-        // Estrutura "desce" suavemente conforme o astronauta sobe.
-        if (estado == Estado.JOGANDO || estado == Estado.ESPERANDO_INICIO) {
-            alturaVisual = MathUtils.lerp(alturaVisual, passos * PIXELS_POR_PASSO, Math.min(1f, 6f * dt));
-        }
-
         astro.atualizar(dt, (estado == Estado.JOGANDO) ? alvoAtivo : null, HOLD_X, HOLD_Y);
+        // A parede desce exatamente na medida em que o astronauta se puxa (pes e maos acompanham os degraus).
+        alturaVisual = astro.getAlturaMundo();
         astroMenu.atualizar(dt, null, HOLD_X, HOLD_Y);
     }
 
@@ -973,7 +965,9 @@ public class GameScreen extends ScreenAdapter {
         BitmapFont m = jogo.fonteMedia;
 
         // Cartao superior esquerdo: fase e alvo atual
-        txt(f, 0.45f, 0.9f, 1f, 1f, "FASE " + (indiceFase + 1), 40f, 512f);
+        float[][] corFase = { {0.45f, 0.90f, 1.00f}, {0.85f, 0.65f, 1.00f}, {1.00f, 0.55f, 0.40f} };
+        float[] cf = corFase[Math.min(indiceFase, corFase.length - 1)];
+        txt(f, cf[0], cf[1], cf[2], 1f, "FASE " + (indiceFase + 1), 40f, 512f);
         txt(m, 1f, 1f, 1f, 1f, fase.nome, 40f, 482f);
         int alvoAtual = Math.min(alvosResolvidos + 1, fase.totalAlvos);
         txt(f, 0.75f, 0.8f, 0.95f, 1f, "Alvo " + alvoAtual + "/" + fase.totalAlvos, 224f, 512f);
