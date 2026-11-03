@@ -739,6 +739,11 @@ public class GameScreen extends ScreenAdapter {
         cartao(s, 20f, 448f, 300f, 78f, Arte.COR_ESQ);
         cartao(s, 700f, 448f, 240f, 78f, Arte.DOURADO);
 
+        // Instrucao central ("Aperte ESQUERDA"): cartao proprio, para nao se misturar com a parede
+        cartao(s, 345f, 452f, 270f, 46f, alvoAtivo != null ? Arte.corDe(alvoAtivo) : Arte.DOURADO);
+        s.setColor(0.06f, 0.08f, 0.17f, 0.92f);
+        Arte.retanguloArredondado(s, 360f, 62f, 240f, 22f, 8f);       // fundo da dica de teclas
+
         // Escada de progresso (um degrau por alvo)
         int n = fase.totalAlvos;
         float alturaTotal = 300f;
@@ -990,7 +995,7 @@ public class GameScreen extends ScreenAdapter {
         for (Direcao d : Direcao.values()) {
             int i = d.ordinal();
             float a = (d == alvoAtivo) ? 1f : 0.5f;
-            float yRotulo = (d == Direcao.ALTO) ? HOLD_Y[i] + RAIO_HOLD + 22f : HOLD_Y[i] - RAIO_HOLD - 16f;
+            float yRotulo = HOLD_Y[i] + RAIO_HOLD + 22f;   // sempre acima: embaixo ficam o braco e a mao do astronauta
             txtC(f, Arte.corDe(d), a, d.rotulo, HOLD_X[i], yRotulo);
         }
 
@@ -1007,7 +1012,7 @@ public class GameScreen extends ScreenAdapter {
                 : (ACEITAR_TECLADO ? "Teclado (setas)" : "Painel offline");
         txt(f, 0.85f, 0.9f, 1f, 1f, status, 750f, 42f);
 
-        txt(f, 0.7f, 0.75f, 0.9f, 0.9f, "P = pausar   R = reiniciar fase", 110f, 74f);
+        txtC(f, Color.LIGHT_GRAY, 1f, "P = pausar   R = reiniciar fase", Main.LARGURA / 2f, 79f);
         textoDestino();
         textosFlutuantes();
     }

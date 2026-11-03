@@ -452,11 +452,11 @@ public class Cenario {
             for (int k = 0; k < 2; k++) {
                 float sg = (k == 0) ? -1f : 1f;
                 float x0 = PE_X + sg * dx - 19f;
-                s.setColor(0.05f, 0.06f, 0.12f, 0.9f);
+                s.setColor(0.05f, 0.06f, 0.12f, 0.55f);
                 s.rect(x0 - 1f, topoDegrau - 11f, 40f, 11f);
-                s.setColor(0.62f, 0.68f, 0.88f, 1f);
+                s.setColor(0.62f, 0.68f, 0.88f, 0.60f);
                 s.rect(x0, topoDegrau - 8f, 38f, 8f);
-                s.setColor(0.92f, 0.95f, 1f, 1f);
+                s.setColor(0.92f, 0.95f, 1f, 0.80f);
                 s.rect(x0, topoDegrau - 2f, 38f, 2f);
             }
         }
