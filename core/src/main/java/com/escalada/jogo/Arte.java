@@ -68,6 +68,23 @@ public final class Arte {
         }
     }
 
+    /** Arco de elipse inclinada (usado nos aneis de planetas). Angulos em graus; tilt em radianos. */
+    public static void arcoEliptico(ShapeRenderer s, float cx, float cy, float rx, float ry, float tilt,
+                                    float graus0, float graus1, float espessura, int segmentos) {
+        float a0 = graus0 * MathUtils.PI / 180f;
+        float passo = (graus1 - graus0) * MathUtils.PI / 180f / segmentos;
+        float ct = MathUtils.cos(tilt), st = MathUtils.sin(tilt);
+        float px = 0f, py = 0f;
+        for (int i = 0; i <= segmentos; i++) {
+            float a = a0 + i * passo;
+            float x = rx * MathUtils.cos(a), y = ry * MathUtils.sin(a);
+            float qx = cx + x * ct - y * st, qy = cy + x * st + y * ct;
+            if (i > 0) s.rectLine(px, py, qx, qy, espessura);
+            px = qx;
+            py = qy;
+        }
+    }
+
     /** Brilho suave: varios circulos translucidos empilhados. */
     public static void brilho(ShapeRenderer s, float cx, float cy, float raio, Color c, float intensidade) {
         for (int i = 0; i < 6; i++) {
