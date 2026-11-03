@@ -643,11 +643,14 @@ public class GameScreen extends ScreenAdapter {
         ShapeRenderer s = jogo.shapes;
         s.begin(ShapeType.Filled);
 
+        cenario.mostrarDegraus = (estado != Estado.MENU);
         cenario.desenhar(s, alturaVisual, tempo, indiceFase, alturaDestino());
         if (estado == Estado.MENU) {
             desenharMenu(s);
         } else {
-            desenharAgarradeiras(s);
+            // Ao chegar ao destino as agarradeiras ja nao servem para nada: somem para a comemoracao ficar limpa.
+            boolean naPlataforma = (estado == Estado.CHEGADA && chegou) || estado == Estado.RESUMO;
+            if (!naPlataforma) desenharAgarradeiras(s);
             desenharEfeitos(s);
             astro.desenhar(s, tempo);
 
@@ -744,6 +747,12 @@ public class GameScreen extends ScreenAdapter {
         s.setColor(0.06f, 0.08f, 0.17f, 0.92f);
         Arte.retanguloArredondado(s, 360f, 62f, 240f, 22f, 8f);       // fundo da dica de teclas
 
+        // Fundo escuro atras dos rotulos das agarradeiras (legibilidade sobre vigas e janelas)
+        s.setColor(0.04f, 0.06f, 0.14f, 0.78f);
+        for (int i = 0; i < 3; i++) {
+            Arte.retanguloArredondado(s, HOLD_X[i] - 54f, HOLD_Y[i] + RAIO_HOLD + 4f, 108f, 24f, 8f);
+        }
+
         // Escada de progresso (um degrau por alvo)
         int n = fase.totalAlvos;
         float alturaTotal = 300f;
@@ -766,10 +775,10 @@ public class GameScreen extends ScreenAdapter {
                 long decorrido = (System.nanoTime() - acendimentoNs) / 1_000_000L;
                 float restante = MathUtils.clamp(1f - (float) decorrido / limite, 0f, 1f);
                 s.setColor(0.06f, 0.08f, 0.17f, 1f);
-                Arte.retanguloArredondado(s, 300f, 498f, 360f, 18f, 9f);
+                Arte.retanguloArredondado(s, 335f, 507f, 290f, 16f, 8f);      // entre os dois cartoes, acima da instrucao
                 if (restante > 0.03f) {
                     s.setColor(1f - restante, 0.2f + 0.75f * restante, 0.3f, 1f);
-                    Arte.retanguloArredondado(s, 303f, 501f, 354f * restante, 12f, 6f);
+                    Arte.retanguloArredondado(s, 338f, 510f, 284f * restante, 10f, 5f);
                 }
             }
         }
@@ -795,9 +804,9 @@ public class GameScreen extends ScreenAdapter {
 
         switch (estado) {
             case PAUSADO:
-                cartao(s, 170f, 110f, 620f, 340f, Arte.DOURADO);
+                cartao(s, 100f, 110f, 760f, 340f, Arte.DOURADO);     // largo o bastante para os 3 rotulos nao se encostarem
                 for (Direcao d : Direcao.values()) {
-                    opcaoCirculo(s, 330f + d.ordinal() * 150f, 270f, d);
+                    opcaoCirculo(s, 240f + d.ordinal() * 240f, 270f, d);
                 }
                 break;
 
@@ -865,6 +874,11 @@ public class GameScreen extends ScreenAdapter {
         botaoMenu(s, MENU_X, MENU_Y[0], MENU_L, MENU_A, Direcao.ESQUERDA, true);
         botaoMenu(s, MENU_X, MENU_Y[1], MENU_L, MENU_A, Direcao.ALTO, false);
         botaoMenu(s, MENU_X, MENU_Y[2], MENU_L, MENU_A, Direcao.DIREITA, false);
+
+        // Fundo escuro atras do subtitulo e do rodape, para o texto nao se misturar com a parede.
+        s.setColor(0.04f, 0.05f, 0.14f, 0.78f);
+        Arte.retanguloArredondado(s, 52f, 354f, 392f, 28f, 10f);
+        Arte.retanguloArredondado(s, 52f, 28f, 700f, 62f, 12f);
 
         // Indicador de conexao do painel.
         if (jogo.serial.isConectado()) s.setColor(0.35f, 0.95f, 0.5f, 1f);
@@ -994,7 +1008,7 @@ public class GameScreen extends ScreenAdapter {
         // Rotulos sob as agarradeiras
         for (Direcao d : Direcao.values()) {
             int i = d.ordinal();
-            float a = (d == alvoAtivo) ? 1f : 0.5f;
+            float a = (d == alvoAtivo) ? 1f : 0.85f;
             float yRotulo = HOLD_Y[i] + RAIO_HOLD + 22f;   // sempre acima: embaixo ficam o braco e a mao do astronauta
             txtC(f, Arte.corDe(d), a, d.rotulo, HOLD_X[i], yRotulo);
         }
@@ -1101,7 +1115,7 @@ public class GameScreen extends ScreenAdapter {
         String[] rotulos = { "Continuar", "Reiniciar fase", "Menu principal" };
         String[] teclas = { "tecla P", "tecla R", "tecla M" };
         for (Direcao d : Direcao.values()) {
-            float x = 330f + d.ordinal() * 150f;
+            float x = 240f + d.ordinal() * 240f;
             txtC(jogo.fonteMedia, Arte.corDe(d), 1f, rotulos[d.ordinal()], x, 205f);
             txtC(jogo.fonte, Color.LIGHT_GRAY, 0.9f, "Botao " + d.rotulo, x, 178f);
             txtC(jogo.fonte, Color.LIGHT_GRAY, 0.7f, teclas[d.ordinal()], x, 156f);
