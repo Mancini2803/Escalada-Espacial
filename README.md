@@ -97,9 +97,9 @@ O astronauta escala **de costas**, de frente para a parede, com estas mudancas e
 - O menu continua com o astronauta de frente, comemorando. Para voltar a vista de frente na escalada, troque `true` por `false`
   na criacao do astronauta em `GameScreen.java`.
 
-## Decoracao espacial (teste)
+## Decoracao espacial 
 
-Apenas nesta versao de teste. O cenario de cada fase ganhou decoracoes desenhadas por codigo em `Cenario.java`:
+ O cenario de cada fase ganhou decoracoes desenhadas por codigo em `Cenario.java`:
 - **Planeta com aneis** na lateral esquerda, **OVNIs** cruzando a tela (3 na fase 3), **asteroides** girando e derivando,
   **estrelas cadentes** e um **satelite** (fases 1 e 2).
 - **Aliens** flutuando nas margens e espiando pelas **janelas da estacao**, com olhos que piscam. A cor muda por fase.
