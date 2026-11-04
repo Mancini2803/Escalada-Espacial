@@ -1,4 +1,4 @@
-# Escalada Espacial - jogo serio para reabilitacao de membros superiores
+# Escalada Espacial - jogo para reabilitacao de membros superiores
 
 Arduino Uno + 3 botoes arcade (Serial 9600) + libGDX (Java) + jSerialComm.
 
