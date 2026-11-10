@@ -2,6 +2,13 @@
 
 Arduino Uno + 3 botoes arcade (Serial 9600) + libGDX (Java) + jSerialComm.
 
+## Executável
+
+O executável está em `release/EscaladaEspacial.jar` (precisa do Java 11 ou mais novo).
+Para abrir: `java -jar release/EscaladaEspacial.jar` ou dê duplo clique em `Executar.bat`
+(o `Executar.bat` procura o jar em `lwjgl3/build/libs`; para usar o da pasta `release`, use o comando acima).
+Com o painel de botões (Arduino) ligado por USB, o jogo mostra "Painel: Conectado em COMx".
+
 ## Como abrir e rodar (IntelliJ IDEA)
 
 1. Instale um JDK 17 ou 21 (ex.: Temurin, adoptium.net) e o IntelliJ IDEA (Community serve).
