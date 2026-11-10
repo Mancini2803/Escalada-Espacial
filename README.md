@@ -65,12 +65,6 @@ arduino/EscaladaEspacial/EscaladaEspacial.ino        firmware com debounce
 - **Reiniciar a fase:** tecla R durante o jogo ou pela pausa (descarta os dados da fase reiniciada).
 - A jogada em si (escalar) e controlada somente pelo painel de botoes (Arduino).
 
-## Executavel
-
-1. Gere o jar: no terminal `gradlew lwjgl3:dist` (ou, no IntelliJ, aba Gradle > lwjgl3 > Tasks > other > dist).
-2. O arquivo fica em `lwjgl3/build/libs/EscaladaEspacial.jar`. Para abrir: `java -jar EscaladaEspacial.jar`
-   (Windows: duplo clique em `Executar.bat`; Linux/macOS: `./executar.sh`). Precisa de Java 11 ou mais novo.
-3. Para entregar, compacte o jar com o `Executar.bat` e a pasta `arduino`.
 
 ## Arduino
 
